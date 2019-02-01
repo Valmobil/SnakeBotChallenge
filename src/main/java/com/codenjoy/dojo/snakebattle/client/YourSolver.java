@@ -27,8 +27,10 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
+import com.codenjoy.dojo.snakebattle.model.MySnake;
 
 import static com.codenjoy.dojo.snakebattle.controller.SnakeV1JastCatchApples.firstVersion;
+import static com.codenjoy.dojo.snakebattle.controller.SnakeV2SnakeModel.secondVersion;
 
 /**
  * User: your name
@@ -40,6 +42,7 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
+    private MySnake mySnake = new MySnake();
 
     YourSolver(Dice dice) {
         this.dice = dice;
@@ -50,9 +53,13 @@ public class YourSolver implements Solver<Board> {
     @Override
     public String get(Board board) {
         this.board = board;
-        if (board.isGameOver()) return "";
+        if (board.isGameOver()) {
+            mySnake = new MySnake();
+            return "";
+        }
 
-        return firstVersion(board);
+//        return firstVersion(board);
+        return secondVersion(board, mySnake);
     }
 
     public static void main(String[] args) {

@@ -1,10 +1,8 @@
 package com.codenjoy.dojo.snakebattle.controller;
 
 import com.codenjoy.dojo.services.Point;
-import com.codenjoy.dojo.services.PointImpl;
 import com.codenjoy.dojo.snakebattle.client.Board;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.codenjoy.dojo.snakebattle.controller.Utils.*;
