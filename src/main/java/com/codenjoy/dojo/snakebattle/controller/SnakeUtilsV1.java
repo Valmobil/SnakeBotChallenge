@@ -8,12 +8,12 @@ import com.codenjoy.dojo.snakebattle.client.Board;
 import java.util.LinkedList;
 import java.util.List;
 
-class Utils {
+class SnakeUtilsV1 {
 
     /** Find nearest element from list */
     static Point getNearestApple(Point head, List<Point> element) {
         double minDistance = Integer.MAX_VALUE;
-        Point nearestPoint = null;
+        Point nearestPoint = new PointImpl(3,2);
         for (Point p : element) {
             //Calculate distance
             double tempDistance = head.distance(p);

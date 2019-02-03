@@ -5,7 +5,7 @@ import com.codenjoy.dojo.snakebattle.client.Board;
 
 import java.util.List;
 
-import static com.codenjoy.dojo.snakebattle.controller.Utils.*;
+import static com.codenjoy.dojo.snakebattle.controller.SnakeUtilsV1.*;
 
 public class SnakeV1JastCatchApples {
 

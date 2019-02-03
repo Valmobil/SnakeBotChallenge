@@ -27,10 +27,10 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
-import com.codenjoy.dojo.snakebattle.model.MySnake;
+import com.codenjoy.dojo.snakebattle.model.MySnakeV2;
 
-import static com.codenjoy.dojo.snakebattle.controller.SnakeV1JastCatchApples.firstVersion;
 import static com.codenjoy.dojo.snakebattle.controller.SnakeV2SnakeModel.secondVersion;
+import static com.codenjoy.dojo.snakebattle.controller.SnakeV3BFS.thirdVersion;
 
 /**
  * User: your name
@@ -42,7 +42,7 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
-    private MySnake mySnake = new MySnake();
+    private MySnakeV2 mySnakeV2 = new MySnakeV2();
 
     YourSolver(Dice dice) {
         this.dice = dice;
@@ -54,12 +54,13 @@ public class YourSolver implements Solver<Board> {
     public String get(Board board) {
         this.board = board;
         if (board.isGameOver()) {
-            mySnake = new MySnake();
+            mySnakeV2 = new MySnakeV2();
             return "";
         }
 
 //        return firstVersion(board);
-        return secondVersion(board, mySnake);
+        return secondVersion(board, mySnakeV2);
+//        return thirdVersion(board, mySnakeV2);
     }
 
     public static void main(String[] args) {
@@ -69,5 +70,4 @@ public class YourSolver implements Solver<Board> {
                 new YourSolver(new RandomDice()),
                 new Board());
     }
-
 }

@@ -6,7 +6,7 @@ import com.codenjoy.dojo.services.PointImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySnake {
+public class MySnakeV2 {
     private Point head;
     private Point tail;
     private Point nextByTail;
@@ -16,7 +16,7 @@ public class MySnake {
 //    private int maxPathToTail;
 //    private List<Point> mustPath;
 
-    public MySnake() {
+    public MySnakeV2() {
         this.head = null;
         this.tail = null;
         this.nextByTail = null;
@@ -64,7 +64,7 @@ public class MySnake {
 
     public void reInitialization(Point head, Point tail) {
         this.body.clear();
-        this.body.add(head);
+//        this.body.add(head);
         this.head = head;
         this.tail = tail;
 //        this.nextByTail = tail;
@@ -72,8 +72,7 @@ public class MySnake {
     }
 
     public void addToHead(Point newHead, int newSize, Point tail) {
-        System.out.printf("Snake old size %s => %s%n", getSize(), newSize);
-        if (this.getSize()==0) {
+        if (newSize == 0) {
             reInitialization(newHead, tail);
             return;
         }
@@ -89,7 +88,7 @@ public class MySnake {
         } else {
             //Decrease after stone
             int oldSize = this.size;
-            for (int i = 0; i < newSize-oldSize; i++) {
+            for (int i = 0; i < newSize - oldSize; i++) {
                 this.body.remove(0);
             }
             this.size = newSize;

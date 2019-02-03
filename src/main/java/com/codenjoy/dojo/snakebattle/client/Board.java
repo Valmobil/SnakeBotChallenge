@@ -60,15 +60,23 @@ public class Board extends AbstractBoard<Elements> {
         return getMyHead().isEmpty();
     }
 
+    public List<Point> getMyWalls() {
+        return get(WALL);
+    }
+    public List<Point> getMyStones() {
+        return get(STONE);
+    }
+
     private List<Point> getMyHead() {
         return get(HEAD_DOWN, HEAD_LEFT, HEAD_RIGHT, HEAD_UP, HEAD_SLEEP, HEAD_EVIL, HEAD_FLY);
     }
 
     public List<Point> getMyBody() {
-        return get(Elements.BODY_HORIZONTAL, Elements.BODY_LEFT_DOWN,Elements.BODY_LEFT_UP,Elements.BODY_RIGHT_DOWN,Elements.BODY_RIGHT_UP,Elements.BODY_VERTICAL);
+        return get(Elements.BODY_HORIZONTAL, Elements.BODY_LEFT_DOWN, Elements.BODY_LEFT_UP, Elements.BODY_RIGHT_DOWN, Elements.BODY_RIGHT_UP, Elements.BODY_VERTICAL);
     }
+
     public List<Point> getMyTail() {
-        return get(Elements.TAIL_INACTIVE, Elements.TAIL_END_DOWN,Elements.TAIL_END_LEFT,Elements.TAIL_END_RIGHT,Elements.TAIL_END_UP);
+        return get(Elements.TAIL_INACTIVE, Elements.TAIL_END_DOWN, Elements.TAIL_END_LEFT, Elements.TAIL_END_RIGHT, Elements.TAIL_END_UP);
     }
 
     public List<Point> getApples() {
