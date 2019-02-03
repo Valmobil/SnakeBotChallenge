@@ -3,21 +3,27 @@ package com.codenjoy.dojo.snakebattle.controller;
 import com.codenjoy.dojo.services.Point;
 import com.codenjoy.dojo.services.PointImpl;
 import com.codenjoy.dojo.snakebattle.client.Board;
+import com.codenjoy.dojo.snakebattle.model.Elements;
+import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
 
 import java.util.*;
 
 public class SnakeUtilsV3 {
 
-    public static List<Point> startBSSBest(Board board, Point header, Point destination, List<Point> additionalPath, List<Point> mySnakeBody) {
+    public static List<Point> startBSSBest(Board board, MySnakeV3 mySnake, List<Point> additionalPath, List<MySnakeV3> otherSnakes) {
+
         Queue<Point> queue = new LinkedList();
         Queue<Integer> queueLevel = new LinkedList();
         Queue<LinkedList<Point>> queuePath = new LinkedList();
-        queue.add(header);
+        Point mySnakeHead = mySnake.getHead();
+        queue.add(mySnakeHead);
         queueLevel.add(0);
-        queuePath.add(new LinkedList<Point>(Arrays.asList(header)));
-        int[][] myArr = buildArrayBest(board, additionalPath, mySnakeBody);
-        myArr[header.getX()][header.getY()] = 4; //Visited
-        List<Point> shortestPath = (List<Point>) recursiveBFSBest(myArr, destination, queue, queuePath, queueLevel, mySnakeBody);
+        queuePath.add(new LinkedList<Point>(Arrays.asList(mySnakeHead)));
+        HashSet<Point> visited = new HashSet<>();
+//        int[][] myArr = buildArrayBest(board, additionalPath, mySnakeBody);
+//        myArr[mySnakeHead.getX()][mySnakeHead.getY()] = 4; //Visited
+//        List<Point> shortestPath = recursiveBFSBest(myArr, destination, queue, queuePath, queueLevel, mySnakeBody);
+        List<Point> shortestPath = recursiveBFSBest(board, mySnake, visited, queue, queuePath, queueLevel);
         System.out.println("ShortestPath:" + shortestPath);
         if (shortestPath == null) {
             return null;
@@ -29,85 +35,56 @@ public class SnakeUtilsV3 {
         }
     }
 
-    public static List<Point> recursiveBFSBest(int[][] myArr, Point destination, Queue<Point> q, Queue<LinkedList<Point>> qp, Queue<Integer> ql, List<Point> mySnakeBody) {
-        if (q.isEmpty()) {
+    private static List<Point> recursiveBFSBest(Board board, MySnakeV3 mySnake, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel) {
+        if (queue.isEmpty()) {
             return null;
         }
-        Point curNode = q.remove();
-        Integer curLevel = ql.remove();
-        List<Point> prevPath = qp.remove();
-        //System.out.println("Path:" + prevPath);
-        if (compareTwoPoints(curNode, destination)) {
+        Point curNode = queue.remove();
+        Integer curLevel = queueLevel.remove();
+        List<Point> prevPath = queuePath.remove();
+//        System.out.println("Path:" + prevPath);
+        //Change future snake
+        MySnakeV3 newMySnake = new MySnakeV3(mySnake);
+        mySnake.setNextStep(curNode);
+
+        if (board.isAt(curNode, Elements.APPLE)) {
             return prevPath;
         }
 
-        removeSnakeTaileAccordingLevel(myArr, mySnakeBody, curLevel);
-
         //check node childs
-        for (Point child : getEmptyChilsds(myArr, curNode)) {
-            q.add(child);
-            List<Point> newPath = new LinkedList<>();
-            newPath.addAll(prevPath);
+        for (Point child : getEmptyChild(board, mySnake)) {
+            queue.add(child);
+            List<Point> newPath = new LinkedList<>(prevPath);
             newPath.add(child);
-            qp.add((LinkedList<Point>) newPath);
-            ql.add(curLevel + 1);
-            myArr[child.getX()][child.getY()] = 4; //Visited
+            queuePath.add((LinkedList<Point>) newPath);
+            queueLevel.add(curLevel + 1);
+            visited.add(child);
         }
 
-        return recursiveBFSBest(myArr, destination, q, qp, ql, mySnakeBody);
+        return recursiveBFSBest(board, newMySnake, visited, queue, queuePath, queueLevel);
+
     }
 
-    private static List<Point> getEmptyChilsds(int[][] myArr, Point curNode) {
+    /** Return next four available steps - wize, clockwize, fly and fury*/
+    private static List<Point> getEmptyChild(Board board, MySnakeV3 mySnake) {
         List<Point> childs = new ArrayList<>();
-        if (myArr[curNode.getX() + 1][curNode.getY()] == 0) {
-            childs.add(new PointImpl(curNode.getX() + 1, curNode.getY()));
+        Point curPoint = mySnake.getHead();
+        Point nextPoint = new PointImpl(curPoint.getX() + 1, curPoint.getY());
+        if (board.isAvailableForNormalSnake(nextPoint)) {
+            childs.add(nextPoint);
         }
-        if (myArr[curNode.getX()][curNode.getY() - 1] == 0) {
-            childs.add(new PointImpl(curNode.getX(), curNode.getY() - 1));
+        nextPoint = new PointImpl(curPoint.getX(), curPoint.getY() - 1);
+        if (board.isAvailableForNormalSnake(nextPoint)) {
+            childs.add(nextPoint);
         }
-        if (myArr[curNode.getX() - 1][curNode.getY()] == 0) {
-            childs.add(new PointImpl(curNode.getX() - 1, curNode.getY()));
+        nextPoint = new PointImpl(curPoint.getX() - 1, curPoint.getY());
+        if (board.isAvailableForNormalSnake(nextPoint)) {
+            childs.add(nextPoint);
         }
-        if (myArr[curNode.getX()][curNode.getY() + 1] == 0) {
-            childs.add(new PointImpl(curNode.getX(), curNode.getY() + 1));
+        nextPoint = new PointImpl(curPoint.getX(), curPoint.getY() + 1);
+        if (board.isAvailableForNormalSnake(nextPoint)) {
+            childs.add(nextPoint);
         }
         return childs;
-    }
-
-    private static void removeSnakeTaileAccordingLevel(int[][] myArr, List<Point> mySnakeBody, Integer curLevel) {
-        for (int i = 0; i < curLevel; i++) {
-        }
-    }
-
-    public static boolean compareTwoPoints(Point one, Point two) {
-        return (one.getX() == two.getX() && one.getY() == two.getY());
-    }
-
-    public static int[][] buildArrayBest(Board board, List<Point> additionalPath, List<Point> mySnakeBody) {
-
-        int[][] myCurrentBoard = new int[40][40];
-        //      write boarder
-        for (Point point : board.getMyWalls()) {
-            myCurrentBoard[point.getX()][point.getY()] = 1;
-        }
-        //      write stones
-        for (Point point : board.getMyStones()) {
-            myCurrentBoard[point.getX()][point.getY()] = 2;
-        }
-        //      write snake
-        for (Point point : board.getMyBody()) {
-            myCurrentBoard[point.getX()][point.getY()] = 3;
-        }
-        //      add future snake path
-        for (Point point : additionalPath) {
-            myCurrentBoard[point.getX()][point.getY()] = 4;
-        }
-        //     remove snake marks from number of points
-//        if (additionalPath != null) {
-//            for (int i = 0; i < Math.min(additionalPath.size() - 2, mySnakeBody.size() - 1); i++) {
-//                myCurrentBoard[mySnakeBody.get(i).getX()][mySnakeBody.get(i).getY()] = 0;
-//            }
-//        }
-        return myCurrentBoard;
     }
 }

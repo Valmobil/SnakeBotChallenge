@@ -1,26 +1,33 @@
 package com.codenjoy.dojo.snakebattle.model;
 
 import com.codenjoy.dojo.services.Point;
-import com.codenjoy.dojo.services.PointImpl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.OptionalLong;
 
-public class MySnakeV2 {
+public class MySnakeV3 {
     private Point head;
     private Point tail;
-    private Point nextByTail;
-    //Size not include head and tail
+//    private Point nextByTail;
+    //Size does not include head and tail
     private int size;
     private List<Point> body;
 //    private int maxPathToTail;
 //    private List<Point> mustPath;
 
-    public MySnakeV2() {
+    public MySnakeV3(MySnakeV3 oldSnake) {
+        this.head = oldSnake.head;
+        this.body = new LinkedList<>(oldSnake.body);
+        this.tail = oldSnake.tail;
+    }
+
+    public MySnakeV3() {
         this.head = null;
         this.tail = null;
-        this.nextByTail = null;
-        this.body = new ArrayList<>();
+//        this.nextByTail = null;
+        this.body = new LinkedList<>();
 //        this.mustPath = new ArrayList<>();
     }
 
@@ -48,9 +55,9 @@ public class MySnakeV2 {
         this.size = size;
     }
 
-    public Point getNextByTail() {
-        return nextByTail;
-    }
+//    public Point getNextByTail() {
+//        return nextByTail;
+//    }
 
 //    public List<Point> getMustPath() {
 //        return mustPath;
@@ -60,6 +67,7 @@ public class MySnakeV2 {
         this.size = this.body.size();
         return this.size;
     }
+
 
     public void reInitialization(Point head, Point tail) {
         this.body.clear();
@@ -96,5 +104,10 @@ public class MySnakeV2 {
         }
     }
 
-
+    public void setNextStep(Point curNode) {
+        this.body.add(this.head);
+        this.head = curNode;
+        this.tail = this.body.get(0);
+        this.body.remove(0);
+    }
 }

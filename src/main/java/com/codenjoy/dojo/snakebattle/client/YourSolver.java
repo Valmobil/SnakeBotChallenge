@@ -28,6 +28,7 @@ import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
 import com.codenjoy.dojo.snakebattle.model.MySnakeV2;
+import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
 
 import static com.codenjoy.dojo.snakebattle.controller.SnakeV2SnakeModel.secondVersion;
 import static com.codenjoy.dojo.snakebattle.controller.SnakeV3BFS.thirdVersion;
@@ -43,6 +44,7 @@ public class YourSolver implements Solver<Board> {
     private Dice dice;
     private Board board;
     private MySnakeV2 mySnakeV2 = new MySnakeV2();
+    private MySnakeV3 mySnakeV3 = new MySnakeV3();
 
     YourSolver(Dice dice) {
         this.dice = dice;
@@ -55,12 +57,15 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) {
             mySnakeV2 = new MySnakeV2();
+            mySnakeV3 = new MySnakeV3();
             return "";
         }
 
 //        return firstVersion(board);
-        return secondVersion(board, mySnakeV2);
-//        return thirdVersion(board, mySnakeV2);
+
+
+//        return secondVersion(board, mySnakeV2);
+        return thirdVersion(board, mySnakeV3);
     }
 
     public static void main(String[] args) {
