@@ -12,14 +12,14 @@ class SnakeUtilsV3 {
 
     static void startBSSBest(Board board, MySnakeV3 mySnake, List<Point> additionalPath, List<MySnakeV3> otherSnakes, Map<Integer, List<Point>> bestPaths) {
 
-        Queue<Point> queue = new LinkedList();
-        Queue<Integer> queueLevel = new LinkedList();
-        Queue<LinkedList<Point>> queuePath = new LinkedList();
+        Queue<Point> queue = new LinkedList<>();
+        Queue<Integer> queueLevel = new LinkedList<>();
+        Queue<LinkedList<Point>> queuePath = new LinkedList<>();
         Queue<MySnakeV3> queueSnakes = new LinkedList<>();
         Point mySnakeHead = mySnake.getHead();
         queue.add(mySnakeHead);
         queueLevel.add(0);
-        queuePath.add(new LinkedList<Point>(Arrays.asList(mySnakeHead)));
+        queuePath.add(new LinkedList<>(Arrays.asList(mySnakeHead)));
         queueSnakes.add(mySnake);
         HashSet<Point> visited = new HashSet<>();
 //        int[][] myArr = buildArrayBest(board, additionalPath, mySnakeBody);
@@ -37,7 +37,7 @@ class SnakeUtilsV3 {
 //        }
     }
 
-    private static void recursiveBFSBest(Board board, LinkedList<MySnakeV3> queueSnakes, HashSet<Point> visited, LinkedList<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, Map<Integer, List<Point>> bestPaths) {
+    private static void recursiveBFSBest(Board board, Queue<MySnakeV3> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, Map<Integer, List<Point>> bestPaths) {
         if (queue.isEmpty()) {
             return;
         }
