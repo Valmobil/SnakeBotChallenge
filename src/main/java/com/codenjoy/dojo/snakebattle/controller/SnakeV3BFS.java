@@ -3,11 +3,10 @@ package com.codenjoy.dojo.snakebattle.controller;
 import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.Point;
 import com.codenjoy.dojo.snakebattle.client.Board;
-import com.codenjoy.dojo.snakebattle.model.MySnakeV2;
 import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
+import sun.reflect.generics.tree.Tree;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.codenjoy.dojo.snakebattle.controller.SnakeUtilsV1.*;
 import static com.codenjoy.dojo.snakebattle.controller.SnakeUtilsV3.startBSSBest;
@@ -20,6 +19,8 @@ public class SnakeV3BFS {
      * Avoid obstacles - DONE
      * Build Snake body - DONE
      * BFS algorithm to one Point
+     * - To nearest Apple
+     *
      * BFS change direction on each step clockwise and vise versa
      * --Add ClockWize, Fly, Fury to Method private static List<Point> getEmptyChild(Board board, MySnakeV3 mySnake)
      *
@@ -35,32 +36,42 @@ public class SnakeV3BFS {
      */
 
 
-    public static String thirdVersion(Board board, MySnakeV3 mysnakeV3) {
+    public static String thirdVersion(Board board, MySnakeV3 mySnake) {
+        //List of built fretful paths
+        TreeMap<Integer,List<Point>> bestPaths = new TreeMap<>();
+
         Point head = board.getMe();
-        if (mysnakeV3.getSize() > board.getMyBody().size()) {
-            System.out.printf("Snake old size %s => %s%n", mysnakeV3.getSize(), board.getMyBody().size());
+        if (mySnake.getSize() > board.getMyBody().size()) {
+            System.out.printf("Snake old size %s => %s%n", mySnake.getSize(), board.getMyBody().size());
             System.out.println("System body: "+ board.getMyBody());
         }
-
-        mysnakeV3.addToHead(head, board.getMyBody().size(), board.getMyTail().get(0));
+        System.out.println("getMyBody System size before change: " + board.getMyBody().size());
+        System.out.println("my Snake         size before change: " + mySnake.getSize());
+        mySnake.addToHead(head, board.getMyBody().size(), board.getMyTail().get(0));
+        System.out.println("my Snake         size after  change: " + mySnake.getSize());
 //        System.out.println(board.toString());
-        System.out.println("My snake   : " + mysnakeV3.getTail() + mysnakeV3.getBody() + mysnakeV3.getHead());
+        System.out.println("My snake   : " + mySnake.getTail() + mySnake.getBody() + mySnake.getHead());
 
 //        List<Point> apples = board.getApples();
 //        Point nextApple = getNearestApple(head, apples);
 //        Point nextStep = buildPathNextStep(board, head, nextApple);
 
-        //calculate the shortest path to Apple
-        List<Point> nextPointApplePath = startBSSBest(board, mysnakeV3
-                ,new LinkedList<Point>(), new LinkedList<MySnakeV3>());
-
-        return getDirectionToNextPoint(head, nextPointApplePath.get(1));
+        //calculate the shortest path to Fruitful points
+        startBSSBest(board, mySnake, new LinkedList<Point>(), new LinkedList<MySnakeV3>(), bestPaths);
+        if (bestPaths.isEmpty()) {
+            System.out.println("Best Path Not Found");
+            return Direction.STOP.toString();
+        }
+        List<Point> theBestPath = bestPaths.lastEntry().getValue();
+        System.out.println(bestPaths);
+        bestPaths.clear();
+        return getDirectionToNextPoint(head, theBestPath.get(1));
 
         //Analyze if snake reach apple and the tail will be reachable (emulate path to apple)
 //        List<Point> nextPointTailPath = null;
 //        if (null != nextPointApplePath) {
 //            System.out.print("To apple + tail: ");
-//            nextPointTailPath = startBSSBest(board, nextApple, mysnakeV3.getNextByTail(), nextPointApplePath, mysnakeV3.getBody());
+//            nextPointTailPath = startBSSBest(board, nextApple, mySnake.getNextByTail(), nextPointApplePath, mySnake.getBody());
 //        }
 //        if ((null != nextPointApplePath) && (null != nextPointTailPath)) {
 //            If apple is reacheble
@@ -69,7 +80,7 @@ public class SnakeV3BFS {
 
         //Calculate the shortest path to Tail
 //        System.out.print("To tail: ");
-//        nextPointTailPath = startBSSBest(board, head, mysnakeV3.getNextByTail(), new LinkedList<Point>(), mysnakeV3.getBody());
+//        nextPointTailPath = startBSSBest(board, head, mySnake.getNextByTail(), new LinkedList<Point>(), mySnake.getBody());
 
 
 //        System.out.println("Next apple: " + nextApple.toString());

@@ -52,11 +52,11 @@ public class Board extends AbstractBoard<Elements> {
                 TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE,
                 // змейки противников
                 ENEMY_HEAD_DOWN, ENEMY_HEAD_LEFT, ENEMY_HEAD_RIGHT, ENEMY_HEAD_UP,
-                ENEMY_HEAD_DEAD,ENEMY_HEAD_EVIL,ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP,
+                ENEMY_HEAD_DEAD, ENEMY_HEAD_EVIL, ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP,
                 // хвосты змеек противников
                 ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP, ENEMY_TAIL_END_RIGHT,
                 ENEMY_TAIL_INACTIVE
-                );
+        );
     }
 
 

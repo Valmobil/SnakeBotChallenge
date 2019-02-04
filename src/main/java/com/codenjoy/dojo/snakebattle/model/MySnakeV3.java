@@ -10,7 +10,7 @@ import java.util.OptionalLong;
 public class MySnakeV3 {
     private Point head;
     private Point tail;
-//    private Point nextByTail;
+    //    private Point nextByTail;
     //Size does not include head and tail
     private int size;
     private List<Point> body;
@@ -21,6 +21,7 @@ public class MySnakeV3 {
         this.head = oldSnake.head;
         this.body = new LinkedList<>(oldSnake.body);
         this.tail = oldSnake.tail;
+        this.size = oldSnake.size;
     }
 
     public MySnakeV3() {
@@ -64,7 +65,6 @@ public class MySnakeV3 {
 //    }
 
     public int getSize() {
-        this.size = this.body.size();
         return this.size;
     }
 
@@ -74,6 +74,7 @@ public class MySnakeV3 {
 //        this.body.add(head);
         this.head = head;
         this.tail = tail;
+        this.size = 0;
 //        this.nextByTail = tail;
 //        this.maxPathToTail = 10;
     }
@@ -83,31 +84,42 @@ public class MySnakeV3 {
             reInitialization(newHead, tail);
             return;
         }
+        int oldSize = this.getSize();
         this.body.add(this.head);
         this.head = newHead;
         this.tail = tail;
-        if (this.size < newSize) {
+        if (oldSize < newSize) {
+            System.out.println("Snake increase:" + this.getSize() + "=>" + newSize);
             this.size++;
-        } else if (this.size == newSize) {
+            System.out.println("getSize: " + this.getSize());
+        } else if (oldSize == newSize) {
 //            this.nextByTail = new PointImpl(this.tail);
             this.body.remove(0);
 //            this.tail = this.body.get(0);
         } else {
             //Decrease after stone
-            int oldSize = this.size;
-            for (int i = 0; i < newSize - oldSize; i++) {
+            System.out.println("Snake decrease:" + this.getSize() + "=>" + newSize);
+            for (int i = 0; i < oldSize - newSize; i++) {
                 this.body.remove(0);
             }
             this.size = newSize;
+            System.out.println("getSize: " + this.getSize());
 //            this.nextByTail = this.tail;
 //            this.tail = this.body.get(0);
         }
     }
 
     public void setNextStep(Point curNode) {
-        this.body.add(this.head);
-        this.head = curNode;
-        this.tail = this.body.get(0);
-        this.body.remove(0);
+        if (!curNode.itsMe(this.head)) {
+            this.body.add(this.head);
+            this.head = curNode;
+            this.tail = this.body.get(0);
+            this.body.remove(0);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return tail.toString() + body + head;
     }
 }

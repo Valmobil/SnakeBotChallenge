@@ -43,7 +43,7 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
-    private MySnakeV2 mySnakeV2 = new MySnakeV2();
+//    private MySnakeV2 mySnakeV2 = new MySnakeV2();
     private MySnakeV3 mySnakeV3 = new MySnakeV3();
 
     YourSolver(Dice dice) {
@@ -56,14 +56,12 @@ public class YourSolver implements Solver<Board> {
     public String get(Board board) {
         this.board = board;
         if (board.isGameOver()) {
-            mySnakeV2 = new MySnakeV2();
+//            mySnakeV2 = new MySnakeV2();
             mySnakeV3 = new MySnakeV3();
             return "";
         }
 
 //        return firstVersion(board);
-
-
 //        return secondVersion(board, mySnakeV2);
         return thirdVersion(board, mySnakeV3);
     }
@@ -72,6 +70,7 @@ public class YourSolver implements Solver<Board> {
         WebSocketRunner.runClient(
                 // paste here board page url from browser after registration
                 "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
+//                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
                 new YourSolver(new RandomDice()),
                 new Board());
     }
