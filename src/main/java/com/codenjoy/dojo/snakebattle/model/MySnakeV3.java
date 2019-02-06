@@ -10,26 +10,27 @@ import java.util.OptionalLong;
 public class MySnakeV3 {
     private Point head;
     private Point tail;
-    //    private Point nextByTail;
-    //Size does not include head and tail
     private int size;
+    private int minSize;
     private List<Point> body;
-//    private int maxPathToTail;
-//    private List<Point> mustPath;
+    private boolean headerUpdated;
+    private boolean tailUpdated;
 
     public MySnakeV3(MySnakeV3 oldSnake) {
         this.head = oldSnake.head;
         this.body = new LinkedList<>(oldSnake.body);
         this.tail = oldSnake.tail;
         this.size = oldSnake.size;
+        this.minSize = oldSnake.minSize;
+        this.headerUpdated = false;
+        this.tailUpdated = false;
     }
 
     public MySnakeV3() {
         this.head = null;
         this.tail = null;
-//        this.nextByTail = null;
         this.body = new LinkedList<>();
-//        this.mustPath = new ArrayList<>();
+        this.minSize = 3;
     }
 
     public Point getHead() {
@@ -56,27 +57,18 @@ public class MySnakeV3 {
         this.size = size;
     }
 
-//    public Point getNextByTail() {
-//        return nextByTail;
-//    }
-
-//    public List<Point> getMustPath() {
-//        return mustPath;
-//    }
-
     public int getSize() {
         return this.size;
     }
 
 
-    public void reInitialization(Point head, Point tail) {
+    private void reInitialization(Point head, Point tail) {
         this.body.clear();
 //        this.body.add(head);
         this.head = head;
         this.tail = tail;
         this.size = 0;
-//        this.nextByTail = tail;
-//        this.maxPathToTail = 10;
+        this.minSize = 3;
     }
 
     public void addToHead(Point newHead, int newSize, Point tail) {
@@ -120,6 +112,40 @@ public class MySnakeV3 {
 
     @Override
     public String toString() {
-        return tail.toString() + body + head;
+        String str;
+        if (tail == null) {
+            str  = "[null]";
+        } else {
+            str = tail.toString();
+        }
+        return str + body + head;
+    }
+
+    public int getMinSize() {
+        return minSize;
+    }
+
+    public void setMinSize(int minSize) {
+        this.minSize = minSize;
+    }
+
+    public void setBody(List<Point> body) {
+        this.body = body;
+    }
+
+    public boolean isHeaderUpdated() {
+        return headerUpdated;
+    }
+
+    public void setHeaderUpdated(boolean headerUpdated) {
+        this.headerUpdated = headerUpdated;
+    }
+
+    public boolean isTailUpdated() {
+        return tailUpdated;
+    }
+
+    public void setTailUpdated(boolean tailUpdated) {
+        this.tailUpdated = tailUpdated;
     }
 }

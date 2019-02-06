@@ -48,15 +48,30 @@ public class Board extends AbstractBoard<Elements> {
     }
 
     public boolean isAvailableForNormalSnake(Point point) {
-        return isAt(point, NONE, APPLE, STONE, FLYING_PILL, FURY_PILL,
+        return isAt(point, NONE, APPLE, STONE, FLYING_PILL, FURY_PILL, GOLD,
                 TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE,
-                // змейки противников
+                // headers of Competitive snakes
                 ENEMY_HEAD_DOWN, ENEMY_HEAD_LEFT, ENEMY_HEAD_RIGHT, ENEMY_HEAD_UP,
                 ENEMY_HEAD_DEAD, ENEMY_HEAD_EVIL, ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP,
-                // хвосты змеек противников
+                // Tails of competitive snakes
                 ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP, ENEMY_TAIL_END_RIGHT,
                 ENEMY_TAIL_INACTIVE
         );
+    }
+
+    public List<Point> getCompetitiveHead() {
+        return get(ENEMY_HEAD_DOWN, ENEMY_HEAD_LEFT, ENEMY_HEAD_RIGHT, ENEMY_HEAD_UP,
+                ENEMY_HEAD_DEAD, ENEMY_HEAD_EVIL, ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP);
+    }
+
+    public List<Point> getCompetitiveTails() {
+        return get(ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP,
+                ENEMY_TAIL_END_RIGHT, ENEMY_TAIL_INACTIVE);
+    }
+
+    public List<Point> getCompetitiveBody() {
+        return get(ENEMY_BODY_HORIZONTAL, ENEMY_BODY_VERTICAL, ENEMY_BODY_LEFT_DOWN,
+                ENEMY_BODY_LEFT_UP, ENEMY_BODY_RIGHT_DOWN, ENEMY_BODY_RIGHT_UP);
     }
 
 
@@ -90,7 +105,7 @@ public class Board extends AbstractBoard<Elements> {
     }
 
     public List<Point> getMyTail() {
-        return get(Elements.TAIL_INACTIVE, Elements.TAIL_END_DOWN, Elements.TAIL_END_LEFT, Elements.TAIL_END_RIGHT, Elements.TAIL_END_UP);
+        return get(Elements.TAIL_INACTIVE, Elements.TAIL_END_DOWN, Elements.TAIL_END_LEFT, Elements.TAIL_END_RIGHT, Elements.TAIL_END_UP, Elements.ENEMY_HEAD_DEAD);
     }
 
     public List<Point> getApples() {

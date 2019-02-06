@@ -4,7 +4,7 @@ import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.Point;
 import com.codenjoy.dojo.snakebattle.client.Board;
 import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
-import sun.reflect.generics.tree.Tree;
+import com.codenjoy.dojo.snakebattle.model.SnakeList;
 
 import java.util.*;
 
@@ -18,14 +18,18 @@ public class SnakeV3BFS {
      * Go to nearest Apple - DONE
      * Avoid obstacles - DONE
      * Build Snake body - DONE
+     * Create competition snakes list - DONE
+     * Competition snakes list prediction
      * BFS algorithm to one Point
-     * - To nearest Apple
-     *
+     * - To nearest Apple - DONE
+     * - To Gold, Stones - DONE
+     * - To head and tail of competition
+     * - To my tail
      * BFS change direction on each step clockwise and vise versa
-     * --Add ClockWize, Fly, Fury to Method private static List<Point> getEmptyChild(Board board, MySnakeV3 mySnake)
-     *
-     *
+     * --Add ClockWise, Fly, Fury to Method private static List<Point> getEmptyChild(Board board, MySnakeV3 mySnake)
+     * competition eat my body + 20 points
      * eat stones +10 points -3 size
+     * <p>
      * eat Fury drug (eat stones and other snakes without body decrease)
      * eat gold (additional points)
      * eat apple +1 point - change priority for the rule
@@ -36,28 +40,34 @@ public class SnakeV3BFS {
      */
 
 
-    public static String thirdVersion(Board board, MySnakeV3 mySnake) {
+    public static String thirdVersion(Board board, MySnakeV3 mySnake, SnakeList othSnakes) {
         //List of built fretful paths
-        TreeMap<Integer,List<Point>> bestPaths = new TreeMap<>();
+        TreeMap<Integer, List<Point>> bestPaths = new TreeMap<>();
 
         Point head = board.getMe();
-        if (mySnake.getSize() > board.getMyBody().size()) {
-            System.out.printf("Snake old size %s => %s%n", mySnake.getSize(), board.getMyBody().size());
-            System.out.println("System body: "+ board.getMyBody());
-        }
-        System.out.println("getMyBody System size before change: " + board.getMyBody().size());
-        System.out.println("my Snake         size before change: " + mySnake.getSize());
+//        if (mySnake.getSize() > board.getMyBody().size()) {
+//            System.out.printf("Snake old size %s => %s%n", mySnake.getSize(), board.getMyBody().size());
+//            System.out.println("System body: "+ board.getMyBody());
+//        }
+//        System.out.println("getMyBody System size before change: " + board.getMyBody().size());
+//        System.out.println("my Snake         size before change: " + mySnake.getSize());
+
+        //Update my Snake body
         mySnake.addToHead(head, board.getMyBody().size(), board.getMyTail().get(0));
-        System.out.println("my Snake         size after  change: " + mySnake.getSize());
+
+        //Build Competitive snakes
+        othSnakes.changeSnakes(board.getCompetitiveHead(),board.getCompetitiveBody().size(), board.getCompetitiveTails());
+        System.out.println("Snake-> " + othSnakes.toString());
+//        System.out.println("my Snake         size after  change: " + mySnake.getSize());
 //        System.out.println(board.toString());
-        System.out.println("My snake   : " + mySnake.getTail() + mySnake.getBody() + mySnake.getHead());
+//        System.out.println("My snake   : " + mySnake.getTail() + mySnake.getBody() + mySnake.getHead());
 
 //        List<Point> apples = board.getApples();
 //        Point nextApple = getNearestApple(head, apples);
 //        Point nextStep = buildPathNextStep(board, head, nextApple);
 
         //calculate the shortest path to Fruitful points
-        startBSSBest(board, mySnake, new LinkedList<Point>(), new LinkedList<MySnakeV3>(), bestPaths);
+        startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths);
         if (bestPaths.isEmpty()) {
             System.out.println("Best Path Not Found");
             return Direction.STOP.toString();
