@@ -1,18 +1,16 @@
 package com.codenjoy.dojo.snakebattle.model;
 
 import com.codenjoy.dojo.services.Point;
-import com.codenjoy.dojo.services.PointImpl;
-import com.codenjoy.dojo.snakebattle.client.Board;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SnakeList {
+public class SnakeListV4 {
     private int sumOfBodies;
-    private List<MySnakeV3> snakes;
+    private List<MySnakeV4> snakes;
 
-    public SnakeList() {
+    public SnakeListV4() {
         this.snakes = new ArrayList<>();
     }
 
@@ -24,11 +22,11 @@ public class SnakeList {
         this.sumOfBodies = sumOfBodies;
     }
 
-    public List<MySnakeV3> getSnakes() {
+    public List<MySnakeV4> getSnakes() {
         return snakes;
     }
 
-    public void setSnakes(List<MySnakeV3> snakes) {
+    public void setSnakes(List<MySnakeV4> snakes) {
         this.snakes = snakes;
     }
 
@@ -38,7 +36,7 @@ public class SnakeList {
     public void changeSnakes(List<Point> headers, int size, List<Point> tails) {
         this.setSumOfBodies(size);
         //Clear update status
-        for (MySnakeV3 snake : this.snakes) {
+        for (MySnakeV4 snake : this.snakes) {
             snake.setHeaderUpdated(false);
             snake.setTailUpdated(false);
         }
@@ -46,7 +44,7 @@ public class SnakeList {
         //Find respective snake by header
         for (Point header : headers) {
             boolean isHeaderFound = false;
-            for (MySnakeV3 snake : this.snakes) {
+            for (MySnakeV4 snake : this.snakes) {
                 if (!snake.isHeaderUpdated()) {
                     Point oldHeader = snake.getHead();
                     if (snake.getHead().itsMe(header)) {
@@ -65,7 +63,7 @@ public class SnakeList {
             }
             //If respective header do not found create new snake
             if (!isHeaderFound) {
-                MySnakeV3 newSnake = new MySnakeV3();
+                MySnakeV4 newSnake = new MySnakeV4();
                 newSnake.setHeaderUpdated(true);
                 newSnake.setHead(header);
                 this.snakes.add(newSnake);
@@ -73,18 +71,18 @@ public class SnakeList {
         }
 
         //Kill not found snakes
-        LinkedList<MySnakeV3> snakeForDelete = new LinkedList<>();
-        for (MySnakeV3 snake : this.getSnakes()) {
+        LinkedList<MySnakeV4> snakeForDelete = new LinkedList<>();
+        for (MySnakeV4 snake : this.getSnakes()) {
             if (!snake.isHeaderUpdated()) {
                 snakeForDelete.add(snake);
             }
         }
-        for (MySnakeV3 snake : snakeForDelete) {
+        for (MySnakeV4 snake : snakeForDelete) {
             this.getSnakes().remove(snake);
         }
 
         //Update tails
-        for (MySnakeV3 snake : snakes) {
+        for (MySnakeV4 snake : snakes) {
             for (Point tail : tails) {
                 //Find respective snake tail
                 //- if snake is stop
@@ -120,7 +118,7 @@ public class SnakeList {
      * Check if point belong one but one point of competitive snake
      */
     public boolean isLastButOne(Point mySnakeHead) {
-        for (MySnakeV3 snake : getSnakes()) {
+        for (MySnakeV4 snake : getSnakes()) {
             Point snakeTailButOne;
             if (snake.getBody().size() == 0) {
                 snakeTailButOne = snake.getHead();
@@ -137,7 +135,7 @@ public class SnakeList {
 
     @Override
     public String toString() {
-        return "SnakeList{" +
+        return "SnakeListV4{" +
                 "sumOfBodies=" + sumOfBodies +
                 ", snakes=" + snakes +
                 '}';

@@ -27,10 +27,10 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
-import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
-import com.codenjoy.dojo.snakebattle.model.SnakeList;
+import com.codenjoy.dojo.snakebattle.model.MySnakeV4;
+import com.codenjoy.dojo.snakebattle.model.SnakeListV4;
 
-import static com.codenjoy.dojo.snakebattle.controller.SnakeV3BFS.thirdVersion;
+import static com.codenjoy.dojo.snakebattle.controller.SnakeV4QueueBFS.StartAppV4;
 
 /**
  * User: your name
@@ -43,8 +43,8 @@ public class YourSolver implements Solver<Board> {
     private Dice dice;
     private Board board;
 //    private MySnakeV2 mySnakeV2 = new MySnakeV2();
-    private MySnakeV3 mySnakeV3 = new MySnakeV3();
-    private SnakeList othSnakes = new SnakeList();
+    private MySnakeV4 mySnakeV4 = new MySnakeV4();
+    private SnakeListV4 othSnakes = new SnakeListV4();
 
     YourSolver(Dice dice) {
         this.dice = dice;
@@ -57,20 +57,21 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) {
 //            mySnakeV2 = new MySnakeV2();
-            mySnakeV3 = new MySnakeV3();
+            mySnakeV4 = new MySnakeV4();
             return "";
         }
 
 //        return firstVersion(board);
 //        return secondVersion(board, mySnakeV2);
-        return thirdVersion(board, mySnakeV3, othSnakes);
+//        return thirdVersion(board, mySnakeV3, othSnakes);
+        return StartAppV4(board, mySnakeV4, othSnakes);
     }
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
                 // paste here board page url from browser after registration
-                "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
-//                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
+//                "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
+                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
                 new YourSolver(new RandomDice()),
                 new Board());
     }

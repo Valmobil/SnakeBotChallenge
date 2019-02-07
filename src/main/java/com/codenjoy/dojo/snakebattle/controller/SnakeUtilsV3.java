@@ -5,13 +5,13 @@ import com.codenjoy.dojo.services.PointImpl;
 import com.codenjoy.dojo.snakebattle.client.Board;
 import com.codenjoy.dojo.snakebattle.model.Elements;
 import com.codenjoy.dojo.snakebattle.model.MySnakeV3;
-import com.codenjoy.dojo.snakebattle.model.SnakeList;
+import com.codenjoy.dojo.snakebattle.model.SnakeListV3;
 
 import java.util.*;
 
 class SnakeUtilsV3 {
 
-    static void startBSSBest(Board board, MySnakeV3 mySnake, List<Point> additionalPath, SnakeList otherSnakes, Map<Integer, List<Point>> bestPaths) {
+    static void startBSSBest(Board board, MySnakeV3 mySnake, List<Point> additionalPath, SnakeListV3 otherSnakes, Map<Integer, List<Point>> bestPaths) {
 
         Queue<Point> queue = new LinkedList<>();
         Queue<Integer> queueLevel = new LinkedList<>();
@@ -38,7 +38,7 @@ class SnakeUtilsV3 {
 //        }
     }
 
-    private static void recursiveBFSBest(Board board, Queue<MySnakeV3> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, SnakeList otherSnakes, Map<Integer, List<Point>> bestPaths) {
+    private static void recursiveBFSBest(Board board, Queue<MySnakeV3> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, SnakeListV3 otherSnakes, Map<Integer, List<Point>> bestPaths) {
         if (queue.isEmpty()) {
             return;
         }
@@ -95,7 +95,7 @@ class SnakeUtilsV3 {
         recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths);
     }
 
-    private static int snakeFoundFruitfulPoint(Board board, MySnakeV3 mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeList otherSnakes) {
+    private static int snakeFoundFruitfulPoint(Board board, MySnakeV3 mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV3 otherSnakes) {
         //Return    0 - blank Point
         //          1 - found eatable Point - nead break searching and save result
         //          2 - found not eatable Point - forbid movement it it
