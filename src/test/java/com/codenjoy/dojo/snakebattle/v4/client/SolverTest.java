@@ -1,4 +1,4 @@
-package com.codenjoy.dojo.snakebattle.client;
+package com.codenjoy.dojo.snakebattle.v4.client;
 
 /*-
  * #%L
@@ -29,7 +29,6 @@ import com.codenjoy.dojo.services.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.codenjoy.dojo.services.Direction.RIGHT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -94,6 +93,59 @@ public class SolverTest {
                 "☼☼○    ☼" +
                 "☼☼     ☼" +
                 "☼☼☼☼☼☼☼☼", Direction.RIGHT);
+
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ●   ☼" +
+                "☼☼ ╘►● ☼" +
+                "☼☼●●●● ☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.UP);
+
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ●▲  ☼" +
+                "☼☼  ╘● ☼" +
+                "☼☼●●●● ☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.RIGHT);
+
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ●╘► ☼" +
+                "☼☼   ● ☼" +
+                "☼☼●●●● ☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.RIGHT);
+
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ● ╘►☼" +
+                "☼☼   ● ☼" +
+                "☼☼●●●● ☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.DOWN);
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ●  ╘☼" +
+                "☼☼   ●▼☼" +
+                "☼☼●●●● ☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.DOWN);
+
+        asertAI("☼☼☼☼☼☼☼☼" +
+                "☼☼●●   ☼" +
+                "☼☼ ●   ☼" +
+                "☼☼   ●╘☼" +
+                "☼☼●●●●▼☼" +
+                "☼☼○    ☼" +
+                "☼☼     ☼" +
+                "☼☼☼☼☼☼☼☼", Direction.DOWN);
     }
 
     private void asertAI(String board, Direction expected) {

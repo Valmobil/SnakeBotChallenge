@@ -1,4 +1,4 @@
-package com.codenjoy.dojo.snakebattle.client;
+package com.codenjoy.dojo.snakebattle.v4.client;
 
 /*-
  * #%L
@@ -25,11 +25,12 @@ package com.codenjoy.dojo.snakebattle.client;
 
 import com.codenjoy.dojo.client.AbstractBoard;
 import com.codenjoy.dojo.services.Point;
-import com.codenjoy.dojo.snakebattle.model.Elements;
+import com.codenjoy.dojo.services.PointImpl;
+import com.codenjoy.dojo.snakebattle.v4.model.Elements;
 
 import java.util.List;
 
-import static com.codenjoy.dojo.snakebattle.model.Elements.*;
+import static com.codenjoy.dojo.snakebattle.v4.model.Elements.*;
 
 /**
  * Класс, обрабатывающий строковое представление доски.
@@ -49,13 +50,17 @@ public class Board extends AbstractBoard<Elements> {
 
     public boolean isAvailableForNormalSnake(Point point) {
         return isAt(point, NONE, APPLE, STONE, FLYING_PILL, FURY_PILL, GOLD,
-                TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE,
                 // headers of Competitive snakes
                 ENEMY_HEAD_DOWN, ENEMY_HEAD_LEFT, ENEMY_HEAD_RIGHT, ENEMY_HEAD_UP,
                 ENEMY_HEAD_DEAD, ENEMY_HEAD_EVIL, ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP,
                 // Tails of competitive snakes
                 ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP, ENEMY_TAIL_END_RIGHT,
-                ENEMY_TAIL_INACTIVE
+                ENEMY_TAIL_INACTIVE,
+                //My body
+                BODY_HORIZONTAL, BODY_LEFT_DOWN, BODY_LEFT_UP, BODY_RIGHT_DOWN,
+                BODY_RIGHT_UP, BODY_VERTICAL,
+                //My Tail
+                TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE
         );
     }
 
@@ -116,4 +121,12 @@ public class Board extends AbstractBoard<Elements> {
         return isAt(x, y, STONE);
     }
 
+    public String pointToString(Point point) {
+        return point.getX() + ":" + point.getY();
+    }
+
+    public Point pointToString(String str) {
+        int colonPosition = str.indexOf(":");
+        return new PointImpl(Integer.parseInt(str.substring(0, colonPosition)), Integer.parseInt(str.substring(colonPosition + 1, str.length())));
+    }
 }

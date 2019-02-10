@@ -1,11 +1,11 @@
-package com.codenjoy.dojo.snakebattle.model;
+package com.codenjoy.dojo.snakebattle.v4.model;
 
 import com.codenjoy.dojo.services.Point;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class MySnakeV4 {
+public class MySnakeV3 {
     private Point head;
     private Point tail;
     private int size;
@@ -14,7 +14,7 @@ public class MySnakeV4 {
     private boolean headerUpdated;
     private boolean tailUpdated;
 
-    public MySnakeV4(MySnakeV4 oldSnake) {
+    public MySnakeV3(MySnakeV3 oldSnake) {
         this.head = oldSnake.head;
         this.body = new LinkedList<>(oldSnake.body);
         this.tail = oldSnake.tail;
@@ -24,7 +24,7 @@ public class MySnakeV4 {
         this.tailUpdated = false;
     }
 
-    public MySnakeV4() {
+    public MySnakeV3() {
         this.head = null;
         this.tail = null;
         this.body = new LinkedList<>();

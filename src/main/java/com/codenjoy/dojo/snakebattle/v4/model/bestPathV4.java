@@ -1,7 +1,7 @@
-package com.codenjoy.dojo.snakebattle.model;
+package com.codenjoy.dojo.snakebattle.v4.model;
 
 import com.codenjoy.dojo.services.Point;
-import com.codenjoy.dojo.snakebattle.client.Board;
+import com.codenjoy.dojo.snakebattle.v4.client.Board;
 
 import java.util.*;
 

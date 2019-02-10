@@ -1,4 +1,4 @@
-package com.codenjoy.dojo.snakebattle.client;
+package com.codenjoy.dojo.snakebattle.v4.client;
 
 /*-
  * #%L
@@ -27,10 +27,11 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
-import com.codenjoy.dojo.snakebattle.model.MySnakeV4;
-import com.codenjoy.dojo.snakebattle.model.SnakeListV4;
+import com.codenjoy.dojo.snakebattle.v4.model.MySnakeV4;
+import com.codenjoy.dojo.snakebattle.v4.model.SnakeListV4;
 
-import static com.codenjoy.dojo.snakebattle.controller.SnakeV4QueueBFS.StartAppV4;
+import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeV4QueueBFS.StartAppV4;
+
 
 /**
  * User: your name
@@ -42,7 +43,6 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
-//    private MySnakeV2 mySnakeV2 = new MySnakeV2();
     private MySnakeV4 mySnakeV4 = new MySnakeV4();
     private SnakeListV4 othSnakes = new SnakeListV4();
 
