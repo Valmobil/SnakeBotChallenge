@@ -69,9 +69,10 @@ public class YourSolver implements Solver<Board> {
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
+                "https://snakebattle.tk/codenjoy-contest/board/player/val_mobil@mail.ru?code=7484974391366816317",
                 // paste here board page url from browser after registration
 //                "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
-                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
+//                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
                 new YourSolver(new RandomDice()),
                 new Board());
     }

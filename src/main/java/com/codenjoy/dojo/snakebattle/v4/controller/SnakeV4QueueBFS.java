@@ -56,7 +56,7 @@ public class SnakeV4QueueBFS {
         othSnakes.changeSnakes(board.getCompetitiveHead(), board.getCompetitiveBody().size(), board.getCompetitiveTails());
 
         //Build fruitful paths
-        TreeMap<Integer, List<Point>> bestPaths = new TreeMap<>();
+        TreeMap<Double, List<Point>> bestPaths = new TreeMap<>();
         startTheBestPathSearch(board, mySnake, othSnakes, bestPaths);
 
         //Analyse list of built paths
@@ -80,21 +80,22 @@ public class SnakeV4QueueBFS {
     /**
      * Launcher for paths search
      */
-    private static void startTheBestPathSearch(Board board, MySnakeV4 mySnake, SnakeListV4 othSnakes, TreeMap<Integer, List<Point>> bestPaths) {
-        // Targets can contains further commands for moving objects
-        // mySnakeBitTail - bit my snake tail
-        // mySnakeTail - look for all except own tail
+    private static void startTheBestPathSearch(Board board, MySnakeV4 mySnake, SnakeListV4 othSnakes, TreeMap<Double, List<Point>> bestPaths) {
+
+        // Targets collection can contains further commands for moving objects
+        // - mySnakeBitTail - bit my snake tail
+        // - mySnakeTail - look for all except own tail
 
         HashSet<String> targets = new HashSet<>();
 
         //Step 1 - follow own tail
         targets.add(mySnake.getTail().toString());
-        startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets);
+        startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 1);
 
         //Step 2 - find first fruitful point
         //calculate the shortest path to Fruitful points
-//        targets.clear();
-//        startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets);
+        targets.clear();
+        startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 0);
 
         //Step 3 - bite own tail
 //        targets.clear();

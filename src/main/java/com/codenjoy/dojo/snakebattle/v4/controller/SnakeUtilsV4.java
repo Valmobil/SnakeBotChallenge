@@ -12,7 +12,10 @@ import java.util.*;
 
 class SnakeUtilsV4 {
 
-    static void startBSSBest(Board board, MySnakeV4 mySnake, List<Point> additionalPath, SnakeListV4 otherSnakes, Map<Integer, List<Point>> bestPaths, HashSet<String> targets) {
+    static void startBSSBest(Board board, MySnakeV4 mySnake, List<Point> additionalPath, SnakeListV4 otherSnakes, Map<Double, List<Point>> bestPaths, HashSet<String> targets, int mode) {
+        // Mode can be:
+        // - 0 way to any fruitful point
+        // - 1 way directly to point (eating apple&gold and avoiding stones etc)
 
         Queue<Point> queue = new LinkedList<>();
         Queue<Integer> queueLevel = new LinkedList<>();
@@ -26,13 +29,13 @@ class SnakeUtilsV4 {
         HashSet<Point> visited = new HashSet<>();
 
         //Start recursion
-        recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets);
+        recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets, mode);
     }
 
     /**
      * Body ot BFS Recursion
      */
-    private static void recursiveBFSBest(Board board, Queue<MySnakeV4> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, SnakeListV4 otherSnakes, Map<Integer, List<Point>> bestPaths, HashSet<String> targets) {
+    private static void recursiveBFSBest(Board board, Queue<MySnakeV4> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, SnakeListV4 otherSnakes, Map<Double, List<Point>> bestPaths, HashSet<String> targets, int mode) {
         if (queue.isEmpty()) {
             return;
         }
@@ -53,7 +56,7 @@ class SnakeUtilsV4 {
         }
         boolean skipPoint = false;
 
-        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes, targetsDirection, targetsCheck);
+        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes, targetsDirection, targetsCheck, mode);
         if (mySnake.getSize() > 2) {
             System.out.print("");
         }
@@ -80,7 +83,7 @@ class SnakeUtilsV4 {
                 visited.add(child);
             }
         }
-        recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets);
+        recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets, mode);
     }
 
     private static void replaceSpecialStringsWithPoints(HashSet<String> targets, HashSet<Point> targetsDirection, HashSet<Point> targetsCheck, MySnakeV4 newMySnake) {
@@ -94,8 +97,19 @@ class SnakeUtilsV4 {
                     targetsDirection.add(newMySnake.getHead());
                 }
                 targetsCheck.add(newMySnake.getTail());
+            } else {
+                Point p = stringToPoint(str);
+                targetsDirection.add(p);
+                targetsCheck.add(p);
             }
         }
+    }
+
+    private static Point stringToPoint(String str) {
+        //Valid string (str) example
+        int x = Integer.parseInt(str.substring(1, str.indexOf(",")));
+        int y = Integer.parseInt(str.substring(str.indexOf(",") + 1, str.indexOf("]")));
+        return new PointImpl(x, y);
     }
 
     /**
@@ -105,7 +119,7 @@ class SnakeUtilsV4 {
      * //          2 - found not eatable Point - forbid movement to it
      * //          4 - skip the point
      */
-    private static int snakeFoundTargetPoint(Board board, MySnakeV4 mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
+    private static int snakeFoundTargetPoint(Board board, MySnakeV4 mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck, int mode) {
         int checkResult;
 
 //        if (mySnake.getSize() == 2) {
@@ -122,17 +136,17 @@ class SnakeUtilsV4 {
             return checkResult;
         }
 
-        checkResult = isStoneFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets);
+        checkResult = isStoneFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, mode);
         if (checkResult != 4) {
             return checkResult;
         }
 
-        checkResult = isAppleOrGoldFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, Elements.APPLE);
+        checkResult = isAppleOrGoldFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, Elements.APPLE, mode);
         if (checkResult != 4) {
             return checkResult;
         }
 
-        checkResult = isAppleOrGoldFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, Elements.GOLD);
+        checkResult = isAppleOrGoldFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, Elements.GOLD, mode);
         if (checkResult != 4) {
             return checkResult;
         }
@@ -144,7 +158,7 @@ class SnakeUtilsV4 {
         return 0;
     }
 
-    private static int isTargetCheckFound(Board board, MySnakeV4 mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
+    private static int isTargetCheckFound(Board board, MySnakeV4 mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
 
         if (targetsCheck.contains(mySnake.getHead())) {
             System.out.println("Utils=>isTargetCheckFound: Target point found!" + mySnake.getHead());
@@ -161,7 +175,7 @@ class SnakeUtilsV4 {
      * - forbid to use own body
      * - last body point (near tail) can be used as target for BFS
      */
-    private static int isOwnBodyFound(Board board, MySnakeV4 mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
+    private static int isOwnBodyFound(Board board, MySnakeV4 mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
         Point mySnakeHead = mySnake.getHead();
 
         // If snake found any part of my snake body - forbid this step
@@ -184,11 +198,11 @@ class SnakeUtilsV4 {
      * Search for simple element without any logic
      */
     private static int isAppleOrGoldFound(Board board, MySnakeV4
-            mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
-                                                  otherSnakes, HashSet<Point> targets, Elements element) {
+            mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
+                                                  otherSnakes, HashSet<Point> targets, Elements element, int mode) {
         Point mySnakeHead = mySnake.getHead();
         if (board.isAt(mySnakeHead, element)) {
-            if (targets.size() > 0) {
+            if (mode == 1) {
                 return 4;
             }
             bestPaths.put(generateBestPathKey(1, prevPath.size()), prevPath);
@@ -199,14 +213,14 @@ class SnakeUtilsV4 {
     }
 
     private static int isStoneFound(Board board, MySnakeV4
-            mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
-                                            otherSnakes, HashSet<Point> targets) {
+            mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
+                                            otherSnakes, HashSet<Point> targets, int mode) {
         Point mySnakeHead = mySnake.getHead();
 
         //Find stone
         int tempSize = mySnake.getSize();
         if (board.isAt(mySnakeHead, Elements.STONE)) {
-            if (targets.size() > 0) {
+            if (mode == 1) {
                 return 2;
             }
 //            System.out.println("Utils=> Found Stone:" + mySnakeHead + "Snake size: " + tempSize + "Snake minSize: " + mySnake.getMinSize());
@@ -230,7 +244,7 @@ class SnakeUtilsV4 {
      * - but we use targetsCheck for comparision with predicted mySnakeHead
      */
     private static int isOwnTailFound(Board board, MySnakeV4
-            mySnake, Map<Integer, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
+            mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
                                               otherSnakes, HashSet<Point> targets) {
 
         //If body <2, reject finding tail
@@ -268,8 +282,8 @@ class SnakeUtilsV4 {
         return Direction.LEFT.toString();
     }
 
-    private static Integer generateBestPathKey(int foundPoints, int pathSize) {
-        return (Integer.MAX_VALUE / 100000 - pathSize) * 100000 + foundPoints;
+    private static Double generateBestPathKey(int foundPoints, int pathSize) {
+        return Double.valueOf(foundPoints) / pathSize;
     }
 
     /**
