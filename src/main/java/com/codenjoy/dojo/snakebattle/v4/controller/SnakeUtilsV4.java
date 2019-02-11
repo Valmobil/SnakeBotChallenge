@@ -55,11 +55,14 @@ class SnakeUtilsV4 {
             replaceSpecialStringsWithPoints(targets, targetsDirection, targetsCheck, newMySnake);
         }
         boolean skipPoint = false;
-
-        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes, targetsDirection, targetsCheck, mode);
-        if (mySnake.getSize() > 2) {
-            System.out.print("");
+        if ( mySnake.getTail().getX() == 0) {
+            System.out.println();
         }
+        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes, targetsDirection, targetsCheck, mode);
+//        if (mySnake.getSize() > 2) {
+//            System.out.print("");
+//        }
+
         if (result != 0) {
             if (result == 1) {
                 //end search and save result
@@ -125,6 +128,7 @@ class SnakeUtilsV4 {
 //        if (mySnake.getSize() == 2) {
 //        System.out.println();
 //        }
+
 
         checkResult = isOwnBodyFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck);
         if (checkResult != 4) {
@@ -246,6 +250,11 @@ class SnakeUtilsV4 {
     private static int isOwnTailFound(Board board, MySnakeV4
             mySnake, Map<Double, List<Point>> bestPaths, List<Point> prevPath, SnakeListV4
                                               otherSnakes, HashSet<Point> targets) {
+
+        //If body = head
+        if (mySnake.getHead().itsMe(mySnake.getTail())) {
+            return 2;
+        }
 
         //If body <2, reject finding tail
         if (mySnake.getSize() < 3) {

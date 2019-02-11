@@ -97,6 +97,9 @@ public class SnakeV4QueueBFS {
         targets.clear();
         startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 0);
 
+
+
+
         //Step 3 - bite own tail
 //        targets.clear();
 //        targets = new HashSet<>();

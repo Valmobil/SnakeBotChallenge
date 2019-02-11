@@ -67,16 +67,22 @@ public class MySnakeV4 {
         this.tail = tail;
         this.size = 0;
         this.minSize = 3;
+
     }
 
     public void addToHead(Point newHead, int newSize, Point tail) {
+        if (newHead.itsMe(tail)) {
+            System.out.println("Stop!");
+        }
         if (newSize == 0) {
             reInitialization(newHead, tail);
             return;
         }
         int oldSize = this.body.size();
-        this.body.add(this.head);
-        this.head = newHead;
+        if (newHead != null) {
+            this.body.add(this.head);
+            this.head = newHead;
+        }
         this.tail = tail;
         if (oldSize < newSize) {
             System.out.println("SnakeObj=>addToHead: Snake increase:" + this.getSize() + "=>" + newSize);
@@ -100,11 +106,15 @@ public class MySnakeV4 {
     }
 
     public void setNextStep(Point curNode) {
-        if (!curNode.itsMe(this.head)) {
-            this.body.add(this.head);
+        if (curNode.itsMe(this.tail)) {
             this.head = curNode;
-            this.tail = this.body.get(0);
-            this.body.remove(0);
+        } else {
+            if (!curNode.itsMe(this.head)) {
+                this.body.add(this.head);
+                this.head = curNode;
+                this.tail = this.body.get(0);
+                this.body.remove(0);
+            }
         }
     }
 
@@ -112,7 +122,7 @@ public class MySnakeV4 {
     public String toString() {
         String str;
         if (tail == null) {
-            str  = "[null]";
+            str = "[null]";
         } else {
             str = tail.toString();
         }
