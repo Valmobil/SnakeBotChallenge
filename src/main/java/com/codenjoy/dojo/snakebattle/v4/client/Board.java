@@ -60,7 +60,10 @@ public class Board extends AbstractBoard<Elements> {
                 BODY_HORIZONTAL, BODY_LEFT_DOWN, BODY_LEFT_UP, BODY_RIGHT_DOWN,
                 BODY_RIGHT_UP, BODY_VERTICAL,
                 //My Tail
-                TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE
+                TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE,
+                //My Head
+                HEAD_DOWN, HEAD_LEFT, HEAD_RIGHT, HEAD_UP, HEAD_DEAD, HEAD_EVIL,
+                HEAD_FLY,  HEAD_SLEEP
         );
     }
 

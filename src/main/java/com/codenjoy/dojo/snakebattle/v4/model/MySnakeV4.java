@@ -71,9 +71,6 @@ public class MySnakeV4 {
     }
 
     public void addToHead(Point newHead, int newSize, Point tail) {
-        if (newHead.itsMe(tail)) {
-            System.out.println("Stop!");
-        }
         if (newSize == 0) {
             reInitialization(newHead, tail);
             return;

@@ -52,6 +52,7 @@ public class YourSolver implements Solver<Board> {
 
     public static int currentRun = 0;
 
+
     @Override
     public String get(Board board) {
         this.board = board;
@@ -60,16 +61,17 @@ public class YourSolver implements Solver<Board> {
             mySnakeV4 = new MySnakeV4();
             return "";
         }
-
 //        return firstVersion(board);
 //        return secondVersion(board, mySnakeV2);
 //        return thirdVersion(board, mySnakeV3, othSnakes);
         return StartAppV4(board, mySnakeV4, othSnakes);
+
     }
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
-                "https://snakebattle.tk/codenjoy-contest/board/player/val_mobil@mail.ru?code=7484974391366816317",
+                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/jyzt9po8lt2qeo1y45qp?code=5984052072816257893",
+//                "https://snakebattle.tk/codenjoy-contest/board/player/val_mobil@mail.ru?code=7484974391366816317",
                 // paste here board page url from browser after registration
 //                "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
 //                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",

@@ -34,6 +34,7 @@ public class SnakeListV4 {
      * Create list of competitive snakes
      */
     public void changeSnakes(List<Point> headers, int size, List<Point> tails) {
+
         this.setSumOfBodies(size);
         //Clear update status
         for (MySnakeV4 snake : this.snakes) {
