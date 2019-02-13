@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeUtilsV4.getDirectionToNextPoint;
 import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeUtilsV4.startBSSBest;
 
-public class SnakeV4QueueBFS {
+public class SnakeV4Start {
 
     /**
      * Need to do:
@@ -51,22 +51,9 @@ public class SnakeV4QueueBFS {
 
         //Update my Snake body
         Point head = board.getMe();
-        mySnake.addToHead(head, board.getMyBody().size(), board.getMyTail().get(0));
+        mySnake.addToHead(head, board.getMyBody().size(), board.getMyTail().get(0), board);
         System.out.println("Snake=>StartAppV4: " + mySnake);
 
-        //Some errors from Board
-        if (head == null) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!");
-            System.out.println("Snake=>StartAppV4: Snake Head is absent");
-            System.out.println("!!!!!!!!!!!!!!!!!!!!");
-            return Direction.STOP.toString();
-        }
-        if (mySnake.getSize() != mySnake.getBody().size()) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!");
-            System.out.println("Snake=>StartAppV4: Snake body <> snake.size()");
-            System.out.println("!!!!!!!!!!!!!!!!!!!!");
-            return Direction.STOP.toString();
-        }
         //Build Competitive snakes
         othSnakes.changeSnakes(board.getCompetitiveHead(), board.getCompetitiveBody().size(), board.getCompetitiveTails());
 
@@ -88,7 +75,7 @@ public class SnakeV4QueueBFS {
         List<Point> theBestPath = bestPaths.lastEntry().getValue().getPath();
         bestPaths.clear();
         long endTime = System.nanoTime();
-        System.out.println("Time lapse(msec): " + (endTime - startTime)/1000000);
+        System.out.println("Time lapse(ms): " + (endTime - startTime) / 1000000);
         return getDirectionToNextPoint(head, theBestPath.get(theBestPath.size() > 1 ? 1 : 0));
     }
 
@@ -101,7 +88,6 @@ public class SnakeV4QueueBFS {
         // Targets collection can contains further commands for moving objects
         // - mySnakeBitTail - bit my snake tail
         // - mySnakeTail - look for all except own tail
-
 
 
         //Step 1 - follow own tail
@@ -117,11 +103,9 @@ public class SnakeV4QueueBFS {
         //Step 3 - check if after apple the tail is reachable
 
         Set<Double> mapKeys = bestPaths.keySet();
-        for (Double key: mapKeys) {
+        for (Double key : mapKeys) {
             BestPathV4 myEntry = bestPaths.get(key);
-
             if (!myEntry.isTailIsReachable()) {
-
                 targets.clear();
                 Board boardNextStep = myEntry.getBoard();
                 MySnakeV4 snakeNextStep = myEntry.getSnake();
@@ -129,10 +113,31 @@ public class SnakeV4QueueBFS {
                 SnakeListV4 otherSnakesNextStep = myEntry.getOtherSnakes();
                 HashSet<String> targetsNextStep = new HashSet<>();
                 targetsNextStep.add(snakeNextStep.getTail().toString());
-
+                myEntry.setAlreadyUsed(true);
                 startBSSBest(boardNextStep, snakeNextStep, pathNextStep, otherSnakesNextStep, bestPaths, targetsNextStep, 1, myEntry);
             }
         }
+
+        //Step 4 - find new path to apple exept already founded
+
+        mapKeys = bestPaths.keySet();
+        for (Double key : mapKeys) {
+            BestPathV4 myEntry = bestPaths.get(key);
+            if (!myEntry.isTailIsReachable()) {
+                targets.clear();
+                Board boardNextStep = myEntry.getBoard();
+                MySnakeV4 snakeNextStep = myEntry.getSnake();
+                LinkedList<Point> pathNextStep = myEntry.getPath();
+                SnakeListV4 otherSnakesNextStep = myEntry.getOtherSnakes();
+                HashSet<String> targetsNextStep = new HashSet<>();
+                targetsNextStep.add(snakeNextStep.getTail().toString());
+                myEntry.setAlreadyUsed(true);
+                startBSSBest(boardNextStep, snakeNextStep, pathNextStep, otherSnakesNextStep, bestPaths, targetsNextStep, 1, myEntry);
+            }
+        }
+
+
+
 //        System.out.println();
 
         //Step 3 - bite own tail

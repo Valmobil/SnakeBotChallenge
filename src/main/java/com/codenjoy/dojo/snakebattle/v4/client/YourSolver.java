@@ -30,7 +30,9 @@ import com.codenjoy.dojo.services.RandomDice;
 import com.codenjoy.dojo.snakebattle.v4.model.MySnakeV4;
 import com.codenjoy.dojo.snakebattle.v4.model.SnakeListV4;
 
-import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeV4QueueBFS.StartAppV4;
+import java.util.HashSet;
+
+import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeV4Start.StartAppV4;
 
 
 /**
@@ -43,7 +45,7 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
-    private MySnakeV4 mySnakeV4 = new MySnakeV4();
+    private MySnakeV4 mySnake = new MySnakeV4();
     private SnakeListV4 othSnakes = new SnakeListV4();
 
     YourSolver(Dice dice) {
@@ -58,14 +60,13 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) {
 //            mySnakeV2 = new MySnakeV2();
-            mySnakeV4 = new MySnakeV4();
+            mySnake = new MySnakeV4();
             return "";
         }
 //        return firstVersion(board);
 //        return secondVersion(board, mySnakeV2);
 //        return thirdVersion(board, mySnakeV3, othSnakes);
-        return StartAppV4(board, mySnakeV4, othSnakes);
-
+        return StartAppV4(board, mySnake, othSnakes);
     }
 
     public static void main(String[] args) {

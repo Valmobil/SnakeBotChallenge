@@ -104,7 +104,7 @@ public class Board extends AbstractBoard<Elements> {
         return get(STONE);
     }
 
-    private List<Point> getMyHead() {
+    public List<Point> getMyHead() {
         return get(HEAD_DOWN, HEAD_LEFT, HEAD_RIGHT, HEAD_UP, HEAD_SLEEP, HEAD_EVIL, HEAD_FLY);
     }
 

@@ -15,6 +15,7 @@ public class BestPathV4 {
     private Map<Integer, List<Point>> bestPaths;
     private HashSet<Point> foundedFruitfulPoints;
     private boolean tailIsReachable;
+    private boolean alreadyUsed;
 
     public BestPathV4(MySnakeV4 snake, Integer score, LinkedList<Point> path, Board board, HashSet<Point> visited, SnakeListV4 otherSnakes, HashSet<Point> foundedFruitfulPoints, boolean tailIsReachable) {
         this.snake = snake;
@@ -25,6 +26,7 @@ public class BestPathV4 {
         this.otherSnakes = otherSnakes;
         this.foundedFruitfulPoints = foundedFruitfulPoints;
         this.tailIsReachable = tailIsReachable;
+
     }
 
     public MySnakeV4 getSnake() {
@@ -102,5 +104,13 @@ public class BestPathV4 {
 
     public void setFoundedFruitfulPoints(HashSet<Point> foundedFruitfulPoints) {
         this.foundedFruitfulPoints = foundedFruitfulPoints;
+    }
+
+    public boolean isAlreadyUsed() {
+        return alreadyUsed;
+    }
+
+    public void setAlreadyUsed(boolean alreadyUsed) {
+        this.alreadyUsed = alreadyUsed;
     }
 }

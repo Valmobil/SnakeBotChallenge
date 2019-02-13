@@ -12,6 +12,7 @@ import com.codenjoy.dojo.snakebattle.v4.model.SnakeListV4;
 import java.util.*;
 
 import static com.codenjoy.dojo.snakebattle.v4.controller.Log.printLog;
+import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeBrain.*;
 
 class SnakeUtilsV4 {
 
@@ -80,7 +81,7 @@ class SnakeUtilsV4 {
             if (result == 1) {
                 //end search and save result
                 Log.printLog("~~~~~", 2);
-                Log.printLog("recursiveBFSBest=> BestPathes: " + bestPaths.toString(),1);
+                Log.printLog("recursiveBFSBest=> BestPathes: " + bestPaths.toString(), 1);
                 queue.clear();
                 return;
             } else {
@@ -90,7 +91,7 @@ class SnakeUtilsV4 {
         }
         if (!skipPoint) {
             //check child node
-            Log.printLog("recursiveBFSBest=> Child nodes for queue: " + getEmptyChild(board, newMySnake, visited),2);
+            Log.printLog("recursiveBFSBest=> Child nodes for queue: " + getEmptyChild(board, newMySnake, visited), 2);
             for (Point child : getEmptyChild(board, newMySnake, visited)) {
                 queue.add(child);
                 LinkedList<Point> newPath = new LinkedList<>(prevPath);
@@ -182,153 +183,27 @@ class SnakeUtilsV4 {
         if (checkResult != 4) {
             return checkResult;
         }
+
+        score = 20;
+        checkResult = isOtherHeadFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, score, mode, visited, childPath);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
+        score = 20;
+        checkResult = isFuryFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, score, mode, visited, childPath);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
+        score = 1;
+        checkResult = isFlyFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, score, mode, visited, childPath);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
+
         return 0;
-    }
-
-    /**
-     * If snake reached the eatable point that was already visited, skip it
-     */
-    private static int isPointWasAlreadyVisited(Board board, MySnakeV4 mySnake, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck, BestPathV4 childPath) {
-        Point mySnakeHead = mySnake.getHead();
-        if (childPath != null) {
-            if (childPath.getFoundedFruitfulPoints() != null) {
-                if (childPath.getFoundedFruitfulPoints().contains(mySnakeHead)) {
-                    Log.printLog("isPointWasAlreadyVisited=> Point already harvested in previous path. Head:" + mySnake.getHead() + " ChildPath->AlreadyCollected: " + childPath.getFoundedFruitfulPoints(),2);
-                    return 0;
-                } else {
-                    return 4;
-                }
-            }
-        }
-        return 4;
-    }
-
-    /**
-     * If snake found own body
-     * - forbid to use own body
-     * - last body point (near tail) can be used as target for BFS
-     */
-    private static int isOwnBodyFound(Board board, MySnakeV4 mySnake, Map<Double, BestPathV4> bestPaths, List<Point> prevPath, SnakeListV4 otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck) {
-        Point mySnakeHead = mySnake.getHead();
-
-        // If snake found any part of my snake body - forbid this step
-        // !!!We use virtual foretasted snake!!!
-        // We can step into last but one snake body point (in order to get tail in reality)
-
-        for (int i = 0; i < mySnake.getBody().size(); i++) {
-            if (mySnakeHead.itsMe(mySnake.getBody().get(i))) {
-                if (targetsCheck.contains(mySnakeHead)) {
-                    return 4;
-                }
-                Log.printLog("Snake=>Found body. Head:" + mySnakeHead.toString(),2);
-                return 2;
-            }
-        }
-        return 4;
-    }
-
-
-    /**
-     * Search for own tail
-     * - we use last body point as target for my tail BFS search
-     * - but we use targetsCheck for comparision with predicted mySnakeHead
-     */
-    private static int isOwnTailFound(Board board, MySnakeV4
-            mySnake, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, SnakeListV4
-                                              otherSnakes, HashSet<Point> targets, int score, HashSet<Point> visited, Integer mode, BestPathV4 childPath) {
-        boolean tailIsFound;
-
-        //If body <2, reject finding tail
-//        if (mySnake.getSize() < 3) {
-            //If we searching for tail calculate only first 10 future steps
-//            if (prevPath.size() > 40 && targets.size() > 0) {
-//                tailIsFound = false;
-//                bestPaths.put(generateBestPathKey(score, prevPath.size(), null, tailIsFound), new BestPathV4(mySnake, score, prevPath, board, visited, otherSnakes, null, tailIsFound));
-//                Log.printLog("Snake=>Tail not Found (10 steps). Head:" + mySnake.getHead() + "Targets: " + targets,2);
-//                return 1;
-//            }
-
-//        }
-        if (mySnake.getHead().itsMe(mySnake.getTail())) {
-//            System.out.println("Utils=>isOwnTailFound!" + mySnake.getHead());
-            if (mode != 1) {
-                Log.printLog("Snake=>Tail Avoiding due to Mode <> 1. Head:" + mySnake.getHead() + " Tail: " + mySnake.getTail() + " MySnake: " + mySnake, 2);
-                return 2;
-            } else {
-                tailIsFound = true;
-                bestPaths.put(generateBestPathKey(score, prevPath.size(), childPath, tailIsFound), new BestPathV4(mySnake, score, prevPath, board, visited, otherSnakes, addFoundedFruifulPoints(mySnake.getHead(), childPath), tailIsFound));
-                Log.printLog("Snake=>Tail Found. Head:" + mySnake.getHead() + " Tail: " + mySnake.getTail() + " MySnake: " + mySnake, 2);
-                return 1;
-            }
-        }
-        return 4;
-    }
-
-
-    private static int isStoneFound(Board board, MySnakeV4
-            mySnake, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, SnakeListV4
-                                            otherSnakes, HashSet<Point> targets, int score, Integer mode, HashSet<Point> visited, BestPathV4 childPath) {
-        Point mySnakeHead = mySnake.getHead();
-
-        //Find stone
-        int tempSize = mySnake.getSize();
-        if (board.isAt(mySnakeHead, Elements.STONE)) {
-            if (mode == 1) {
-                Log.printLog("Snake=>Stone avoiding due to Mode = 1. Head:" + mySnake.getHead(),2);
-                return 2;
-            }
-//            System.out.println("Utils=> Found Stone:" + mySnakeHead + "Snake size: " + tempSize + "Snake minSize: " + mySnake.getMinSize());
-            if (tempSize >= otherSnakes.getSumOfBodies() + 3 + 4) {
-                System.out.println("Utils=>isStoneFound: Snake >= Competitions + 7");
-                boolean tailIsFound = false;
-                bestPaths.put(generateBestPathKey(score, prevPath.size(), null, tailIsFound), new BestPathV4(mySnake, score, prevPath, board, visited, otherSnakes, addFoundedFruifulPoints(mySnake.getHead(), childPath), tailIsFound));
-                Log.printLog("Snake=>Stone (eatable) Found. Head:" + mySnake.getHead() + " My snake size: " + mySnake.getSize() + " Other Snakes Size: " + otherSnakes.getSumOfBodies(),2);
-                return 1;
-            } else {
-                Log.printLog("Snake=>Stone avoiding due to size. Head:" + mySnake.getHead() + " My snake size: " + mySnake.getSize() + " Other Snakes Size: " + otherSnakes.getSumOfBodies(),2);
-//                System.out.println("Stone!!! Get Away");
-                return 2;
-            }
-        }
-        return 4;
-    }
-
-    /**
-     * Search for simple element without any logic
-     */
-    private static int isAppleOrGoldFound(Board board, MySnakeV4
-            mySnake, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, SnakeListV4
-                                                  otherSnakes, HashSet<Point> targets, Elements element, Integer mode, int score, HashSet<Point> visited, BestPathV4 childPath) {
-        Point mySnakeHead = mySnake.getHead();
-        if (board.isAt(mySnakeHead, element)) {
-            if (mode == 1) {
-                return 4;
-            }
-            boolean tailIsFound = false;
-            bestPaths.put(generateBestPathKey(score, prevPath.size(), null, tailIsFound), new BestPathV4(mySnake, score, prevPath, board, visited, otherSnakes, addFoundedFruifulPoints(mySnake.getHead(), childPath), tailIsFound));
-//            System.out.println("Utils=>isAppleOrGoldFound: Found!" + element + mySnakeHead);
-            Log.printLog("Snake=>Apple or Gold found. Head:" + mySnake.getHead() + " Element: " + element + " Mode=" + mode,2);
-            return 1;
-        }
-        return 4;
-    }
-
-
-    private static int isTargetCheckFound(Board board, MySnakeV4
-            mySnake, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, SnakeListV4
-                                                  otherSnakes, HashSet<Point> targets, HashSet<Point> targetsCheck, HashSet<Point> visited, int score, BestPathV4 childPath, Integer mode) {
-
-        if (targetsCheck.contains(mySnake.getHead())) {
-//            System.out.println("Utils=>isTargetCheckFound: Target point found!" + mySnake.getHead());
-            boolean tailIsFound = false;
-            if (mode == 1) {
-                tailIsFound = true;
-            }
-            bestPaths.put(generateBestPathKey(score, prevPath.size(), childPath, tailIsFound), new BestPathV4(mySnake, score, prevPath, board, visited, otherSnakes, addFoundedFruifulPoints(mySnake.getHead(), childPath), tailIsFound));
-            Log.printLog("Snake=>Targeted element found. Head:" + mySnake.getHead() + " Targets: " + targets + " Targets Check: " + targetsCheck,2);
-            return 1;
-        }
-        return 4;
     }
 
     /**
@@ -347,7 +222,7 @@ class SnakeUtilsV4 {
         return Direction.LEFT.toString();
     }
 
-    private static Double generateBestPathKey(int foundPoints, int pathSize, BestPathV4 childPath, boolean tailIsFound) {
+    public static Double generateBestPathKey(int foundPoints, int pathSize, BestPathV4 childPath, boolean tailIsFound) {
         if (childPath != null) {
             return (Double.valueOf(childPath.getScore()) / childPath.getPath().size()) + (tailIsFound ? 100 : 0);
         }
@@ -384,24 +259,47 @@ class SnakeUtilsV4 {
                 //if we can enter to this point
                 if (!(mySnake.getSize() == 0 && nextPoint.itsMe(mySnake.getTail()))) {
                     //Snake without body cannot get tail
-                    if (!(mySnake.getSize() > 0 && nextPoint.itsMe(mySnake.getBody().get(mySnake.getBody().size() - 1)))) {
-                        //If Snake cannot reach own neck
-                        childs.add(nextPoint);
-                    } else {
-                        Log.printLog("getEmptyChildAddNextPoint=> Snake body > 0, try bite own neck. Next point: " + nextPoint, 0);
+                    try {
+                        try {
+                            if (!snakeTryToGetOwnNeck(mySnake, nextPoint)) {
+                                childs.add(nextPoint);
+                            } else {
+                                Log.printLog("getEmptyChildAddNextPoint=> Snake body > 0, try bite own neck. Next point: " + nextPoint, 0);
+                            }
+                        } catch (NullPointerException e) {
+                            System.out.println("Error !!!");
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Error!!!");
                     }
                 } else {
                     Log.printLog("getEmptyChildAddNextPoint=> Snake body == 0, try turn around. Next point: " + nextPoint, 0);
                 }
             } else {
-                Log.printLog("getEmptyChildAddNextPoint=> Standard obstacles. Next point: " + nextPoint,0);
+                Log.printLog("getEmptyChildAddNextPoint=> Standard obstacles. Next point: " + nextPoint, 0);
             }
         } else {
             Log.printLog("getEmptyChildAddNextPoint=> Already Visited. Next point: " + nextPoint, 0);
         }
     }
 
-    private static HashSet<Point> addFoundedFruifulPoints(Point head, BestPathV4 childPath) {
+    private static boolean snakeTryToGetOwnNeck(MySnakeV4 mySnake, Point nextPoint) {
+        if (mySnake.getBody() != null) {
+            if (mySnake.getBody().size() > 0) {
+                if (mySnake.getBody().get(mySnake.getBody().size() - 1) != null) {
+                    if (nextPoint.itsMe(mySnake.getBody().get(mySnake.getBody().size() - 1))) {
+                        //If Snake try to reach own neck
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public static HashSet<Point> addFoundedFruifulPoints(Point head, BestPathV4 childPath) {
         HashSet<Point> foundedFruitfulPoints;
         if (childPath != null) {
             foundedFruitfulPoints = new HashSet<>(childPath.getFoundedFruitfulPoints());
@@ -412,3 +310,5 @@ class SnakeUtilsV4 {
         return foundedFruitfulPoints;
     }
 }
+
+
