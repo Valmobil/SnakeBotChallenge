@@ -17,11 +17,11 @@ import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeBrain.*;
 class SnakeUtilsV4 {
 
     static void startBSSBest(Board board, MySnakeV4 mySnake, LinkedList<Point> additionalPath, SnakeListV4 otherSnakes, Map<Double, BestPathV4> bestPaths, HashSet<String> targets, Integer mode, BestPathV4 childPath) {
-
-
         // Mode can be:
         // - 0 way to any fruitful point
         // - 1 way directly to point (eating apple&gold and avoiding stones etc)
+        // - 2 fury mode - go to othSnakesBodies avoiding any other points
+        // - 3 look for fury or gold as direct target on the board
 
         Queue<Point> queue = new LinkedList<>();
         Queue<Integer> queueLevel = new LinkedList<>();
@@ -48,12 +48,13 @@ class SnakeUtilsV4 {
      * Body ot BFS Recursion
      */
     private static void recursiveBFSBest(Board board, Queue<MySnakeV4> queueSnakes, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, SnakeListV4 otherSnakes, Map<Double, BestPathV4> bestPaths, HashSet<String> targets, Integer mode, BestPathV4 childPath) {
+
         if (queue.isEmpty()) {
             return;
         }
 
         //For debug purposes
-        printLog(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets, mode);
+        printLog(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets, mode, 1);
 
         LinkedList<Point> prevPath = queuePath.remove();
         Point curNode = queue.remove();
@@ -74,7 +75,8 @@ class SnakeUtilsV4 {
 //        if (mySnake.getTail().getX() == 0) {
 //            System.out.println();
 //        }
-        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes, targetsDirection, targetsCheck, mode, visited, childPath);
+        int result = snakeFoundTargetPoint(board, newMySnake, bestPaths, prevPath, otherSnakes,
+                targetsDirection, targetsCheck, mode, visited, childPath);
         Log.printLog("Result: " + result, 0);
 
         if (result != 0) {
@@ -91,7 +93,7 @@ class SnakeUtilsV4 {
         }
         if (!skipPoint) {
             //check child node
-            Log.printLog("recursiveBFSBest=> Child nodes for queue: " + getEmptyChild(board, newMySnake, visited), 2);
+            Log.printLog("recursiveBFSBest=> Child nodes for queue: " + getEmptyChild(board, newMySnake, visited), 1);
             for (Point child : getEmptyChild(board, newMySnake, visited)) {
                 queue.add(child);
                 LinkedList<Point> newPath = new LinkedList<>(prevPath);
@@ -105,6 +107,14 @@ class SnakeUtilsV4 {
         recursiveBFSBest(board, queueSnakes, visited, queue, queuePath, queueLevel, otherSnakes, bestPaths, targets, mode, childPath);
     }
 
+    public static void checkSnakeFlyFuryStatus(Board board, MySnakeV4 mySnake, Point nextStep) {
+        if (board.isAt(nextStep, Elements.FLYING_PILL)) {
+            mySnake.setFly(mySnake.getFly() + 10);
+        }
+        if (board.isAt(nextStep, Elements.FURY_PILL)) {
+            mySnake.setFury(mySnake.getFury() + 10);
+        }
+    }
 
     private static void replaceSpecialStringsWithPoints(HashSet<String> targets, HashSet<Point> targetsDirection, HashSet<Point> targetsCheck, MySnakeV4 newMySnake) {
         targetsDirection.clear();
@@ -145,12 +155,18 @@ class SnakeUtilsV4 {
 //        if (mySnake.getSize() == 2) {
 //        System.out.println();
 //        }
+        checkResult = isFuryModeAvailable(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck, childPath, mode);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
+
         checkResult = isPointWasAlreadyVisited(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck, childPath);
         if (checkResult != 4) {
             return checkResult;
         }
 
-        checkResult = isOwnBodyFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck);
+        checkResult = isOwnBodyFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck, mode);
         if (checkResult != 4) {
             return checkResult;
         }
@@ -178,7 +194,16 @@ class SnakeUtilsV4 {
             return checkResult;
         }
 
-        score = 0;
+        if (mode == 2) {
+            //If fury mode
+            score = 20;
+        } else if (mode == 3) {
+            //for gold and fury (when we look forward on the board)
+            score = 10;
+        } else {
+            //If tail mode
+            score = 0;
+        }
         checkResult = isTargetCheckFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, targetsCheck, visited, score, childPath, mode);
         if (checkResult != 4) {
             return checkResult;
@@ -189,6 +214,13 @@ class SnakeUtilsV4 {
         if (checkResult != 4) {
             return checkResult;
         }
+
+        score = 0;
+        checkResult = isOtherBodyFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, score, mode, visited, childPath);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
 
         score = 20;
         checkResult = isFuryFound(board, mySnake, bestPaths, prevPath, otherSnakes, targets, score, mode, visited, childPath);
@@ -203,8 +235,10 @@ class SnakeUtilsV4 {
         }
 
 
+
         return 0;
     }
+
 
     /**
      * Generate direction for one next step to point
@@ -226,7 +260,7 @@ class SnakeUtilsV4 {
         if (childPath != null) {
             return (Double.valueOf(childPath.getScore()) / childPath.getPath().size()) + (tailIsFound ? 100 : 0);
         }
-        return (Double.valueOf(foundPoints) / pathSize) + (tailIsFound ? 100 : 0);
+        return ((double) foundPoints / pathSize) + (tailIsFound ? 100 : 0);
     }
 
     /**
@@ -287,11 +321,8 @@ class SnakeUtilsV4 {
         if (mySnake.getBody() != null) {
             if (mySnake.getBody().size() > 0) {
                 if (mySnake.getBody().get(mySnake.getBody().size() - 1) != null) {
-                    if (nextPoint.itsMe(mySnake.getBody().get(mySnake.getBody().size() - 1))) {
-                        //If Snake try to reach own neck
-                        return true;
-                    }
-
+                    //If Snake try to reach own neck
+                    return nextPoint.itsMe(mySnake.getBody().get(mySnake.getBody().size() - 1));
                 }
             }
         }
@@ -309,6 +340,31 @@ class SnakeUtilsV4 {
         foundedFruitfulPoints.add(head);
         return foundedFruitfulPoints;
     }
+
+
+    public static boolean myHeaderOtherSnakesReached(Point mySnakeHead, SnakeListV4 otherSnakes) {
+        for (MySnakeV4 snake : otherSnakes.getSnakes()) {
+            if (snake.getHead().itsMe(mySnakeHead)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean myHeaderOtherSnakesReachedArroundHead(Point mySnakeHead, SnakeListV4 otherSnakes) {
+        for (MySnakeV4 snake : otherSnakes.getSnakes()) {
+            Point othHead = snake.getHead();
+            if (othHead.itsMe(mySnakeHead)) {
+                return true;
+            }
+            //Check for points around head
+            if (othHead.distance(mySnakeHead) < 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 

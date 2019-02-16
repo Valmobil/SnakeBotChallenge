@@ -68,28 +68,14 @@ public class MySnakeV4 {
 
     private void reInitialization(Point head, Point tail) {
         this.body.clear();
-//        this.body.add(head);
         this.head = head;
         this.tail = tail;
         this.minSize = 3;
-//        this.fly = 0;
-//        this.fury = 0;
         this.size = 0;
     }
 
-    private int prevSize;
-
+//    private int prevSize;
     public void addToHead(Point newHead, int newSize, Point tail, Board board) {
-
-        if (prevSize == 0) {
-            prevSize=newSize;
-        }
-        if (Math.abs(newSize - prevSize) > 3 ) {
-            System.out.println("Error");
-        } else {
-            prevSize=newSize;
-        }
-
 
         if (newSize == 0) {
             reInitialization(newHead, tail);
@@ -118,6 +104,10 @@ public class MySnakeV4 {
         }
         this.setSize(this.getBody().size());
 
+        //Decrease super property
+        decreaseFuryFlyStatus(this);
+
+
         //Decrease after collision
         //Check for errors
         //Check for errors
@@ -133,23 +123,30 @@ public class MySnakeV4 {
         if (Math.abs(board.getMyBody().size() - this.size) > 1) {
             System.out.println("Snake error");
         }
+
     }
 
-    public void setNextStep(Point curNode) {
-        if (curNode.itsMe(this.tail)) {
-            this.head = curNode;
-        } else {
-            if (!curNode.itsMe(this.head)) {
-                this.body.add(this.head);
-                this.head = curNode;
-                this.tail = this.body.get(0);
-                this.body.remove(0);
-            }
-        }
+    private void decreaseFuryFlyStatus(MySnakeV4 mySnakeV4) {
         this.fury = this.fury > 0 ? this.fury - 1 : this.fury;
         this.fly = this.fly > 0 ? this.fly - 1 : this.fly;
     }
 
+    public void setNextStep(Point curNode) {
+        if (this.tail != null) {
+            if (curNode.itsMe(this.tail)) {
+                this.head = curNode;
+            } else {
+                if (!curNode.itsMe(this.head)) {
+                    this.body.add(this.head);
+                    this.head = curNode;
+                    this.tail = this.body.get(0);
+                    this.body.remove(0);
+                }
+            }
+        }
+
+        decreaseFuryFlyStatus(this);
+    }
 
 
     public int getMinSize() {
@@ -204,6 +201,6 @@ public class MySnakeV4 {
         } else {
             str = tail.toString();
         }
-        return "Fury:"+ fury + " Fly:" + fly + " Snake:" +  str + body + head;
+        return "Fury:" + fury + " Fly:" + fly + " Snake:" + str + body + head;
     }
 }

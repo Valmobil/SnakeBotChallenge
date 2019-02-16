@@ -95,7 +95,8 @@ public class BestPathV4 {
 
     @Override
     public String toString() {
-        return this.path + " Snake: " + this.snake;
+        return "Score:" + this.score + "Dist:" + this.path.size() + "Tail:" + this.tailIsReachable +
+                "AlreadyUsed:" + this.alreadyUsed + "Path:" + this.path + " Snake: " + this.snake;
     }
 
     public HashSet<Point> getFoundedFruitfulPoints() {

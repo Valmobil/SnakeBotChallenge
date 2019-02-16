@@ -54,8 +54,8 @@ public class Board extends AbstractBoard<Elements> {
                 ENEMY_HEAD_DOWN, ENEMY_HEAD_LEFT, ENEMY_HEAD_RIGHT, ENEMY_HEAD_UP,
                 ENEMY_HEAD_DEAD, ENEMY_HEAD_EVIL, ENEMY_HEAD_FLY, ENEMY_HEAD_SLEEP,
                 // Tails of competitive snakes
-                ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP, ENEMY_TAIL_END_RIGHT,
-                ENEMY_TAIL_INACTIVE,
+//                ENEMY_TAIL_END_DOWN, ENEMY_TAIL_END_LEFT, ENEMY_TAIL_END_UP, ENEMY_TAIL_END_RIGHT,
+//                ENEMY_TAIL_INACTIVE,
                 //My body
                 BODY_HORIZONTAL, BODY_LEFT_DOWN, BODY_LEFT_UP, BODY_RIGHT_DOWN,
                 BODY_RIGHT_UP, BODY_VERTICAL,
@@ -63,7 +63,10 @@ public class Board extends AbstractBoard<Elements> {
                 TAIL_END_DOWN, TAIL_END_LEFT, TAIL_END_UP, TAIL_END_RIGHT, TAIL_INACTIVE,
                 //My Head
                 HEAD_DOWN, HEAD_LEFT, HEAD_RIGHT, HEAD_UP, HEAD_DEAD, HEAD_EVIL,
-                HEAD_FLY,  HEAD_SLEEP
+                HEAD_FLY,  HEAD_SLEEP,
+                //Other Snakes body
+                ENEMY_BODY_HORIZONTAL, ENEMY_BODY_VERTICAL, ENEMY_BODY_LEFT_DOWN,
+                ENEMY_BODY_LEFT_UP, ENEMY_BODY_RIGHT_DOWN, ENEMY_BODY_RIGHT_UP
         );
     }
 
@@ -116,6 +119,10 @@ public class Board extends AbstractBoard<Elements> {
         return get(Elements.TAIL_INACTIVE, Elements.TAIL_END_DOWN, Elements.TAIL_END_LEFT, Elements.TAIL_END_RIGHT, Elements.TAIL_END_UP, Elements.ENEMY_HEAD_DEAD);
     }
 
+    public List<Point> getMyFury() {
+        return get(Elements.FURY_PILL);
+    }
+
     public List<Point> getApples() {
         return get(APPLE);
     }
@@ -130,6 +137,13 @@ public class Board extends AbstractBoard<Elements> {
 
     public Point pointToString(String str) {
         int colonPosition = str.indexOf(":");
-        return new PointImpl(Integer.parseInt(str.substring(0, colonPosition)), Integer.parseInt(str.substring(colonPosition + 1, str.length())));
+        return new PointImpl(Integer.parseInt(str.substring(0, colonPosition)), Integer.parseInt(str.substring(colonPosition + 1)));
     }
+
+    public List<Point> getMyGold() {
+        return get(GOLD);
+    }
+
+    public List<Point> getMyOtherBody() {return get(ENEMY_BODY_HORIZONTAL, ENEMY_BODY_VERTICAL, ENEMY_BODY_LEFT_DOWN,
+            ENEMY_BODY_LEFT_UP, ENEMY_BODY_RIGHT_DOWN, ENEMY_BODY_RIGHT_UP);}
 }

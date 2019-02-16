@@ -27,9 +27,12 @@ import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
+import com.codenjoy.dojo.snakebattle.v4.controller.Log;
 import com.codenjoy.dojo.snakebattle.v4.model.MySnakeV4;
 import com.codenjoy.dojo.snakebattle.v4.model.SnakeListV4;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 
 import static com.codenjoy.dojo.snakebattle.v4.controller.SnakeV4Start.StartAppV4;
@@ -59,23 +62,17 @@ public class YourSolver implements Solver<Board> {
     public String get(Board board) {
         this.board = board;
         if (board.isGameOver()) {
-//            mySnakeV2 = new MySnakeV2();
             mySnake = new MySnakeV4();
             return "";
         }
-//        return firstVersion(board);
-//        return secondVersion(board, mySnakeV2);
-//        return thirdVersion(board, mySnakeV3, othSnakes);
+        Log.printLog(board.toString(),0);
         return StartAppV4(board, mySnake, othSnakes);
     }
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
-                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/jyzt9po8lt2qeo1y45qp?code=5984052072816257893",
-//                "https://snakebattle.tk/codenjoy-contest/board/player/val_mobil@mail.ru?code=7484974391366816317",
+                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/6ndtvc6yvpd4w6zwmuer?code=6889565379839031161",
                 // paste here board page url from browser after registration
-//                "https://game2.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
-//                "https://game3.epam-bot-challenge.com.ua/codenjoy-contest/board/player/valmobil@gmail.com?code=2039282413817115302",
                 new YourSolver(new RandomDice()),
                 new Board());
     }
