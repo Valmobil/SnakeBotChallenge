@@ -18,6 +18,7 @@ public class SnakeV4Start {
 
     /**
      * Need to do:
+     *
      * Go to nearest Apple - DONE
      * Avoid obstacles - DONE
      * Build Snake body - DONE
@@ -28,8 +29,8 @@ public class SnakeV4Start {
      * - To Gold, Stones - DONE
      * - To head and tail of competition - DONE
      * - To my body - DONE
-     * BFS change direction on each step clockwise and vise versa - NOT DONE (Realy need!!!)
-     * --Add ClockWise, Fly, Fury to Method getEmptyChild
+     * BFS change direction on each step clockwise - DONE
+     * --Add ClockWise, Fly, Fury to Method getEmptyChild - NOT DONE (Realy need!!!)
      * competition eat my body + 20 points - DONE
      * eat stones +10 points -3 size - DONE
      * eat Fury drug (eat stones and other snakes without body decrease) - DONE
@@ -41,7 +42,8 @@ public class SnakeV4Start {
      * you can bit the snake to head and neck!!! - DONE
      * If forecast coincide with real life - use forecast and continue to calculate future - NOT DONE (Realy need!!!)
      * Do manual drive (by selecting next target type - linked to different keys on keyboard) - NOT DONE (
-     */
+     *
+     *    */
 
 
     public static String StartAppV4(Board board, MySnakeV4 mySnake, SnakeListV4 othSnakes) {
